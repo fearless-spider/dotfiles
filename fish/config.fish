@@ -199,3 +199,11 @@ export GEM_HOME="$(ruby -e 'puts Gem.user_dir')"
 export PATH="$PATH:$GEM_HOME/bin"
 export PATH="$HOME/.cache/rebar3/bin:$PATH"
 export PATH="$HOME/.cargo/bin:$PATH"
+
+## PYENV
+set PYENV_ROOT $HOME/.pyenv
+set -x PATH $PYENV_ROOT/bin $PATH
+status --is-interactive; and . (pyenv init -|psub)
+status --is-interactive; and . (pyenv virtualenv-init -|psub)
+set -x VIRTUAL_ENV_DISABLE_PROMPT 1
+
