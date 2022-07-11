@@ -1,4 +1,4 @@
-﻿## Set values
+## Set values
 # Hide welcome message
 set fish_greeting
 set VIRTUAL_ENV_DISABLE_PROMPT "1"
@@ -100,6 +100,7 @@ alias la='exa -a --color=always --group-directories-first --icons'  # all files 
 alias ll='exa -l --color=always --group-directories-first --icons'  # long format
 alias lt='exa -aT --color=always --group-directories-first --icons' # tree listing
 alias l.="exa -a | egrep '^\.'"                                     # show only dotfiles
+alias ip="ip -color"
 
 # Replace some more things with better alternatives
 alias cat='bat --style header --style rules --style snip --style changes --style header'
@@ -109,7 +110,7 @@ alias cat='bat --style header --style rules --style snip --style changes --style
 alias grubup="sudo update-grub"
 alias fixpacman="sudo rm /var/lib/pacman/db.lck"
 alias tarnow='tar -acf '
-alias untar='tar -zxvf '
+alias untar='tar -xvf '
 alias wget='wget -c '
 alias rmpkg="sudo pacman -Rdd"
 alias psmem='ps auxf | sort -nr -k 4'
@@ -150,8 +151,51 @@ alias jctl="journalctl -p 3 -xb"
 # Recent installed packages
 alias rip="expac --timefmt='%Y-%m-%d %T' '%l\t%n %v' | sort | tail -200 | nl"
 
-
-## Run paleofetch if session is interactive
-if status --is-interactive
-   neofetch --ascii ~/spider.txt
+## Run neofetch if session is interactive
+if status --is-interactive && type -q neofetch
+   neofetch
 end
+
+## SSH
+setenv SSH_ENV $HOME/.ssh/environment
+
+function start_agent                                                                                                                                                                    
+    echo "Initializing new SSH agent ..."
+    ssh-agent -c | sed 's/^echo/#echo/' > $SSH_ENV
+    echo "succeeded"
+    chmod 600 $SSH_ENV 
+    . $SSH_ENV > /dev/null
+    ssh-add
+end
+
+function test_identities                                                                                                                                                                
+    ssh-add -l | grep "The agent has no identities" > /dev/null
+    if [ $status -eq 0 ]
+        ssh-add
+        if [ $status -eq 2 ]
+            start_agent
+        end
+    end
+end
+
+if [ -n "$SSH_AGENT_PID" ] 
+    ps -ef | grep $SSH_AGENT_PID | grep ssh-agent > /dev/null
+    if [ $status -eq 0 ]
+        test_identities
+    end  
+else
+    if [ -f $SSH_ENV ]
+        . $SSH_ENV > /dev/null
+    end  
+    ps -ef | grep $SSH_AGENT_PID | grep -v grep | grep ssh-agent > /dev/null
+    if [ $status -eq 0 ]
+        test_identities
+    else 
+        start_agent
+    end  
+end
+
+export GEM_HOME="$(ruby -e 'puts Gem.user_dir')"
+export PATH="$PATH:$GEM_HOME/bin"
+export PATH="$HOME/.cache/rebar3/bin:$PATH"
+export PATH="$HOME/.cargo/bin:$PATH"
