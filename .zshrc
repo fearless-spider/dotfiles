@@ -107,10 +107,6 @@ export TTC_APIKEYS=false
 export TTC_REPOS='~/Code'
 export TTC_REPOS_DEPTH=2
 export TTC_GITBOT='gitlog'
-export CONSUMER_KEY='fc5HNacXsvdEI8zgLS3wSoCbN'
-export CONSUMER_SECRET='J4D1IqWGxXEldiO46YMKklehFuDMssJzlNJqZ2UXLZPNPtgDT5'
-export ACCESS_TOKEN='2845655361-oj0piJm30HTitkYbauLwao6eH9ujeJZTy8oDcPJ'
-export ACCESS_TOKEN_SECRET='V4gUOYhvv80KZX716q2l0BQbNn4w3HxibgsGn6BcMfq9Q'
 
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
